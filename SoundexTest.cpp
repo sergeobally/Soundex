@@ -1,19 +1,36 @@
 #include "pch.h"
-using namespace std;
-using ::testing::Eq;
+#include "Soundex.h"
+using namespace testing;
 
-class Soundex 
+
+class SoundexEncoding : public ::testing::Test
 {
-public :
-	string encode(const string& word) const
-	{
-		return word;
-	}
+public:
+	Soundex soundex;
 };
 
-TEST(SoundexEncoding, RetainsSoleLetterOfOneLetterWord) 
+TEST_F(SoundexEncoding, RetainsSoleLetterOfOneLetterWord) 
 {
-	Soundex soundex;
-	auto encoded = soundex.encode("A");
-	ASSERT_THAT(encoded, Eq("A"));
+	ASSERT_THAT(soundex.encode("A"), Eq("A000"));
+}
+
+TEST_F(SoundexEncoding, PadsithZeroEnsureThreeDigits)
+{
+	ASSERT_THAT(soundex.encode("I"), Eq("I000"));
+}
+
+// rule #2 (“replace consonants with digits after the first letter”)
+TEST_F(SoundexEncoding, ReplacesConsonantsWithAppropriateDigits)
+{
+	ASSERT_THAT(soundex.encode("Ax"), Eq("A200"));
+}
+TEST_F(SoundexEncoding, IgnoresNonAlphabetics) {
+	ASSERT_THAT(soundex.encode("A#"), Eq("A000"));
+}
+
+TEST_F(SoundexEncoding, ReplacesMultipleConsonantsWithDigits) {
+	ASSERT_THAT(soundex.encode("Acdl"), Eq("A234"));
+}
+TEST_F(SoundexEncoding, EmptyCode) {
+	ASSERT_THAT(soundex.encode(""), Eq(""));
 }
