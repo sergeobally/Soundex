@@ -31,6 +31,15 @@ TEST_F(SoundexEncoding, IgnoresNonAlphabetics) {
 TEST_F(SoundexEncoding, ReplacesMultipleConsonantsWithDigits) {
 	ASSERT_THAT(soundex.encode("Acdl"), Eq("A234"));
 }
-TEST_F(SoundexEncoding, EmptyCode) {
-	ASSERT_THAT(soundex.encode(""), Eq(""));
+
+TEST_F(SoundexEncoding, LimitsLengthToFourCharacters) {
+	ASSERT_THAT(soundex.encode("Dcdlb").length(), Eq(4u));
+}
+
+TEST_F(SoundexEncoding, IgnoresVowelLikeLetters) {
+	ASSERT_THAT(soundex.encode("Baeiouhycdl"), Eq("B234"));
+}
+
+TEST_F(SoundexEncoding, CombinesDuplicateEncodings) {
+	ASSERT_THAT(soundex.encode("Abfcgdt"), Eq("A123"));
 }

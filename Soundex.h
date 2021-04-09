@@ -27,6 +27,7 @@ private:
 		for (char c : word)
 			if (ConsonantsBook.find(c) != ConsonantsBook.end())
 			{
+				if (!digits.empty() && ConsonantsBook.at(c) == digits.back()) continue;
 				digits += ConsonantsBook.at(c);
 			}
 		return digits;
@@ -42,7 +43,7 @@ private:
 	string zeroPad(const string& word) const
 	{
 		size_t size = word.size();
-		return  size < MaxCodeLength ? word + string(MaxCodeLength -1 -size, '0') : string(word.begin(), word.begin()+ MaxCodeLength);
+		return  size < MaxCodeLength ? word + string(MaxCodeLength -size, '0') : string(word.begin(), word.begin()+ MaxCodeLength);
 	}
 };
 const unordered_set<char> Soundex::SpecialBook{ 'a', 'e', 'i', 'o', 'u', 'y', 'h', 'w' };
